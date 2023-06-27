@@ -1,62 +1,103 @@
-// // Antarmuka Pembayaran yang sudah ada dalam aplikasi kita
-// interface IPembayaran
+// // Antarmuka seragam untuk manusia
+// interface IHuman
 // {
-//     void ProsesPembayaran(int jumlah);
+//     string GetName();
+//     int GetAge();
 // }
+// // Interface (IHuman):
 
-// // Implementasi Pembayaran dalam aplikasi kita
-// class PembayaranAplikasi : IPembayaran
+// // Ini adalah Interface yang digunakan untuk mengakses informasi manusia dengan cara yang seragam.
+// // Interface ini memiliki dua metode: GetName() untuk mendapatkan nama manusia dan GetAge() untuk mendapatkan usia manusia.
+// // Semua adapter yang dibuat harus mengimplementasikan antarmuka ini.
+
+// class Person
 // {
-//     public void ProsesPembayaran(int jumlah)
+//     public string Name { get; set; }
+//     public int Age { get; set; }
+// }
+// // Kelas Person:
+
+// // Ini adalah kelas yang mewakili manusia dengan atribut Name dan Age.
+// // Kelas ini tidak sesuai dengan antarmuka IHuman, karena menggunakan nama properti yang berbeda.
+// // Adapter untuk Person
+// class PersonAdapter : IHuman
+// {
+//     private Person person;
+
+//     public PersonAdapter(Person person)
 //     {
-//         Console.WriteLine("Menggunakan metode pembayaran dalam aplikasi: " + jumlah);
+//         this.person = person;
+//     }
+
+//     public string GetName()
+//     {
+//         return person.Name;
+//     }
+
+//     public int GetAge()
+//     {
+//         return person.Age;
 //     }
 // }
 
-// // Antarmuka Pembayaran pihak ketiga (misal: PayPal)
-// interface IPembayaranPihakKetiga
+// // Adapter untuk Kelas Person (PersonAdapter):
+
+// // Ini adalah adapter yang menghubungkan antarmuka IHuman dengan kelas Person.
+// // Adapter ini menerima objek Person sebagai parameter konstruktor dan menyimpannya sebagai variabel anggota.
+// // Untuk mengimplementasikan antarmuka IHuman, adapter ini menyediakan implementasi metode GetName() yang mengembalikan Name dari objek Person, dan metode GetAge() yang mengembalikan Age dari objek Person.
+// // Kelas Employee
+// class Employee
 // {
-//     void DoPayment(double amount);
+//     public string FullName { get; set; }
+//     public int YearsOfService { get; set; }
 // }
 
-// // Implementasi pembayaran dengan PayPal
-// class PembayaranPayPal : IPembayaranPihakKetiga
+// // Adapter untuk Employee
+// class EmployeeAdapter : IHuman
 // {
-//     public void DoPayment(double amount)
+//     private Employee employee;
+
+//     public EmployeeAdapter(Employee employee)
 //     {
-//         Console.WriteLine("Menggunakan metode pembayaran PayPal: " + amount);
+//         this.employee = employee;
+//     }
+
+//     public string GetName()
+//     {
+//         return employee.FullName;
+//     }
+
+//     public int GetAge()
+//     {
+//         // Menghitung usia berdasarkan tahun kerja
+//         int currentYear = DateTime.Now.Year;
+//         int birthYear = currentYear - employee.YearsOfService;
+//         return currentYear - birthYear;
 //     }
 // }
 
-// // Adapter untuk menghubungkan antarmuka IPembayaranPihakKetiga dengan IPembayaran
-// class PembayaranAdapter : IPembayaran
-// {
-//     private IPembayaranPihakKetiga pembayaranPihakKetiga;
-
-//     public PembayaranAdapter(IPembayaranPihakKetiga pembayaran)
-//     {
-//         pembayaranPihakKetiga = pembayaran;
-//     }
-
-//     public void ProsesPembayaran(int jumlah)
-//     {
-//         double amount = Convert.ToDouble(jumlah);
-//         pembayaranPihakKetiga.DoPayment(amount);
-//     }
-// }
-
-// // Client
+// // Contoh penggunaan
 // class Program
 // {
 //     static void Main(string[] args)
 //     {
-//         // Membuat objek pembayaran dalam aplikasi
-//         IPembayaran pembayaran = new PembayaranAplikasi();
-//         pembayaran.ProsesPembayaran(100);
+//         // Membuat instance manusia
+//         Person person = new Person() { Name = "John Doe", Age = 30 };
+//         Employee employee = new Employee() { FullName = "Jane Smith", YearsOfService = 5 };
 
-//         // Membuat objek pembayaran dengan PayPal melalui adapter
-//         IPembayaranPihakKetiga pembayaranPayPal = new PembayaranPayPal();
-//         IPembayaran adapter = new PembayaranAdapter(pembayaranPayPal);
-//         adapter.ProsesPembayaran(200);
+//         // Membuat adapter untuk setiap manusia
+//         IHuman personAdapter = new PersonAdapter(person);
+//         IHuman employeeAdapter = new EmployeeAdapter(employee);
+
+//         // Menggunakan antarmuka seragam untuk mengakses informasi manusia
+//         DisplayHumanInformation(personAdapter);
+//         DisplayHumanInformation(employeeAdapter);
+//     }
+
+//     static void DisplayHumanInformation(IHuman human)
+//     {
+//         Console.WriteLine("Name: " + human.GetName());
+//         Console.WriteLine("Age: " + human.GetAge());
+//         Console.WriteLine();
 //     }
 // }
